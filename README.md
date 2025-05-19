@@ -1,18 +1,20 @@
 
 # flutter_async_value
 
-A simple and elegant way to handle asynchronous states in Flutter apps. The `AsyncValue<T>` class provides a clean and unified interface to represent the four common async states: `initial`, `loading`, `data`, and `error`. Combined with the `AsyncBuilder<T>` widget, it simplifies state management and UI rendering for async operations.
+A simple and elegant way to handle asynchronous states in Flutter apps. The `AsyncValue<T, E>` class provides a clean and unified interface to represent four common async states: `initial`, `loading`, `data`, and `error`. Combined with the `AsyncValueBuilder<T, E>` widget and `AsyncResult<T, E>` utility, this package simplifies state management and UI rendering for asynchronous operations.
 
 ## ✨ Features
 
-- **Unified Async States**: Handle async states declaratively (`initial`, `loading`, `data`, `error`)
-- **Minimal Boilerplate**: Reduce repetitive state-checking code
-- **Composable Widgets**: `AsyncBuilder<T>` to easily build different UI per state
-- **Flexible State Mapping**: Easily transform or update state using methods like `map`, `maybeMap`, and `copyWith`
+- **Unified Async States**: `AsyncValue<T, E>` handles `initial`, `loading`, `data`, and `error` states
+- **Minimal Boilerplate**: Reduces repetitive code in async UI rendering
+- **Typed Error and Data**: Specify custom types for data and error
+- **UI Composition**: `AsyncValueBuilder<T, E>` builds UI based on async state
+- **State Transformation**: Methods like `map`, `maybeMap`, and `copyWith` for clean transitions
+- **Lightweight**: No dependencies outside Flutter SDK
 
 ## 🚀 Installation
 
-Add to your `pubspec.yaml`:
+Add this to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
@@ -29,89 +31,91 @@ flutter pub get
 
 ## 🧩 Usage
 
-### Create an `AsyncValue`
+### Create an `AsyncValue<T, E>`
 
 ```dart
-AsyncValue<String> value = AsyncValue.initial();
+AsyncValue<String, Exception> value = AsyncValue.initial();
 
-// When loading
+// While loading
 value = AsyncValue.loading();
 
-// When data is available
-value = AsyncValue.data('Hello');
+// On success
+value = AsyncValue.data("Hello World");
 
-// When there's an error
-value = AsyncValue.error(Exception('Something went wrong'));
+// On error
+value = AsyncValue.error(Exception("Something went wrong"));
 ```
 
-### Update or Transform State
+### Use `AsyncValueBuilder`
 
 ```dart
-value = value.copyWith(data: 'Updated'); // only updates data if in data state
-
-value.map(
-  initial: (_) => print('Initial'),
-  loading: (_) => print('Loading...'),
-  data: (data) => print('Data: ${data.data}'),
-  error: (error) => print('Error: ${error.error}'),
-);
-```
-
-### Use `AsyncBuilder` in Widgets
-
-```dart
-AsyncBuilder<String>(
+AsyncValueBuilder<String, Exception>(
   value: value,
-  initial: (context) => const Text('Start'),
-  loading: (context) => const CircularProgressIndicator(),
-  data: (context, data) => Text('Result: $data'),
-  error: (context, error) => Text('Oops: $error'),
+  initial: (_) => const Text('Idle'),
+  loading: (_) => const CircularProgressIndicator(),
+  data: (_, data) => Text('Result: $data'),
+  error: (_, error) => Text('Error: $error'),
 )
 ```
 
 ## 📘 API Reference
 
-### `AsyncValue<T>`
+### `AsyncValue<T, E>`
 
-Represents one of the four async states.
+Represents the four async states.
+
+#### Constructors:
 
 - `AsyncValue.initial()`
 - `AsyncValue.loading()`
 - `AsyncValue.data(T data)`
-- `AsyncValue.error(Object error)`
+- `AsyncValue.error(E error)`
 
-#### Methods
+#### Properties and Methods:
 
-- `copyWith({T? data, Object? error})`
-- `map({...})` – exhaustive pattern matching
-- `maybeMap({...})` – optional pattern matching with fallback
-- `isInitial`, `isLoading`, `isData`, `isError` – boolean flags
+- `isInitial`, `isLoading`, `isData`, `isError`
+- `copyWith({T? data, E? error})`
+- `map({required ..., required ..., ...})`
+- `maybeMap({...})`
 
-### `AsyncBuilder<T>`
+### `AsyncValueBuilder<T, E>`
 
-Widget that builds UI based on the current `AsyncValue<T>`.
+Builds widgets based on the current state of `AsyncValue<T, E>`.
 
 ```dart
-AsyncBuilder<T>({
-  required AsyncValue<T> value,
+AsyncValueBuilder<T, E>({
+  required AsyncValue<T, E> value,
   required WidgetBuilder initial,
   required WidgetBuilder loading,
   required Widget Function(BuildContext, T) data,
-  required Widget Function(BuildContext, Object) error,
+  required Widget Function(BuildContext, E) error,
 });
+```
+
+### `AsyncResult<T, E>`
+
+Represents a simplified result type with only `data` or `error`.
+
+```dart
+final result = AsyncResult<String, String>.data("Success");
+
+result.map(
+  data: (value) => print(value),
+  error: (e) => print("Error: $e"),
+);
 ```
 
 ## 🧪 Example
 
 ```dart
 class MyWidget extends StatelessWidget {
-  final AsyncValue<String> value;
+  final AsyncValue<String, Exception> value;
 
   const MyWidget({super.key, required this.value});
 
   @override
   Widget build(BuildContext context) {
-    return AsyncBuilder<String>(
+    return AsyncValueBuilder(
       value: value,
       initial: (_) => ElevatedButton(
         onPressed: () => print('Fetch data'),

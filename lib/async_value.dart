@@ -4,8 +4,6 @@
 /// loading, success, and error states more easily and consistently.
 library;
 
-export 'src/async_value_base.dart';
-
 import 'package:flutter/material.dart';
 
 /// Represents the status of an asynchronous operation.
