@@ -83,7 +83,7 @@ class AsyncResult<T, E> {
 /// ```
 class AsyncValueBuilder<T, E> extends StatelessWidget {
   final AsyncValue<T, E> value;
-  final Widget Function(BuildContext context) initial;
+  final Widget Function(BuildContext context)? initial;
   final Widget Function(BuildContext context) loading;
   final Widget Function(BuildContext context, T data) data;
   final Widget Function(BuildContext context, E error) error;
@@ -91,7 +91,7 @@ class AsyncValueBuilder<T, E> extends StatelessWidget {
   const AsyncValueBuilder({
     super.key,
     required this.value,
-    required this.initial,
+    this.initial,
     required this.loading,
     required this.data,
     required this.error,
@@ -101,7 +101,10 @@ class AsyncValueBuilder<T, E> extends StatelessWidget {
   Widget build(BuildContext context) {
     switch (value._status) {
       case AsyncValueStatus.initial:
-        return initial(context);
+        if (initial != null) {
+          return initial!(context);
+        }
+        return loading(context);
       case AsyncValueStatus.loading:
         return loading(context);
       case AsyncValueStatus.data:
