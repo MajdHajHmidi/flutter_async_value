@@ -25,22 +25,22 @@ class AsyncValue<T, E> {
   final E? error;
 
   const AsyncValue.initial()
-    : _status = AsyncValueStatus.initial,
-      data = null,
-      error = null;
+      : _status = AsyncValueStatus.initial,
+        data = null,
+        error = null;
 
   const AsyncValue.loading()
-    : _status = AsyncValueStatus.loading,
-      data = null,
-      error = null;
+      : _status = AsyncValueStatus.loading,
+        data = null,
+        error = null;
 
   const AsyncValue.data({required this.data})
-    : _status = AsyncValueStatus.data,
-      error = null;
+      : _status = AsyncValueStatus.data,
+        error = null;
 
   const AsyncValue.error({required this.error})
-    : _status = AsyncValueStatus.error,
-      data = null;
+      : _status = AsyncValueStatus.error,
+        data = null;
 
   bool get isInitial => _status == AsyncValueStatus.initial;
   bool get isLoading => _status == AsyncValueStatus.loading;
@@ -59,12 +59,12 @@ class AsyncResult<T, E> {
   final E? error;
 
   const AsyncResult.data({required this.data})
-    : _status = AsyncResultStatus.data,
-      error = null;
+      : _status = AsyncResultStatus.data,
+        error = null;
 
   const AsyncResult.error({required this.error})
-    : _status = AsyncResultStatus.error,
-      data = null;
+      : _status = AsyncResultStatus.error,
+        data = null;
 
   bool get isData => _status == AsyncResultStatus.data;
   bool get isError => _status == AsyncResultStatus.error;
