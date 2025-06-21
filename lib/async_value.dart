@@ -115,8 +115,15 @@ class PaginatedAsyncValue<T, E> extends AsyncValue<T, E> {
 
   PaginatedAsyncValue<T, E> copyWithPageLoading() =>
       copyWithPageState(PageState.loading);
-  PaginatedAsyncValue<T, E> copyWithPageError() =>
-      copyWithPageState(PageState.error);
+  PaginatedAsyncValue<T, E> copyWithPageError(E newError) {
+    return PaginatedAsyncValue._(
+      status: status,
+      data: data,
+      error: newError,
+      pageState: PageState.error,
+    );
+  }
+
   PaginatedAsyncValue<T, E> clearPageState() =>
       copyWithPageState(PageState.none);
 
@@ -196,6 +203,7 @@ class AsyncResult<T, E> {
 /// A widget that builds UI based on the [AsyncValue] state.
 ///
 /// Example usage:
+///
 /// ```dart
 /// AsyncBuilder<int>(
 ///   value: asyncValue,
