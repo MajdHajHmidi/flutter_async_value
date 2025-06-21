@@ -3,7 +3,7 @@ import 'package:flutter_async_value/async_value.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  group('AsyncValue', () {
+  group('AsyncValue Unit Tests', () {
     test('should return correct status for each constructor', () {
       final initial = AsyncValue<int, String>.initial();
       expect(initial.isInitial, true);
@@ -32,7 +32,7 @@ void main() {
     });
   });
 
-  group('PaginatedAsyncValue', () {
+  group('PaginatedAsyncValue Unit Tests', () {
     test('mergeData combines properly', () {
       final value =
           PaginatedAsyncValue<List<int>, String>.data(data: [1, 2, 3]);
@@ -55,7 +55,7 @@ void main() {
     });
   });
 
-  group('AsyncValueBuilder widget tests', () {
+  group('AsyncValueBuilder Widget Tests', () {
     testWidgets('AsyncValueBuilder displays correct widget', (tester) async {
       final value = AsyncValue<int, String>.data(data: 5);
 
@@ -74,7 +74,7 @@ void main() {
     });
   });
 
-  group('PaginatedAsyncValueBuilder', () {
+  group('PaginatedAsyncValueBuilder Widget Tests', () {
     testWidgets('renders builder when pageState is none', (tester) async {
       final value = PaginatedAsyncValue<List<int>, String>.data(
         data: [1, 2, 3],
