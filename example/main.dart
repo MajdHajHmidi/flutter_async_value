@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_async_value/async_value.dart';
+import 'package:flutter_async_value/flutter_async_value.dart';
 
 class MyWidget extends StatelessWidget {
   final AsyncValue<String, Exception> value;
