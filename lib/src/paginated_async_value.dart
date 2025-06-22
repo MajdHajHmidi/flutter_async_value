@@ -70,8 +70,18 @@ class PaginatedAsyncValue<T, E> extends AsyncValue<T, E> {
     );
   }
 
-  bool get isLoadingPage => pageState == PageState.loading;
-  bool get hasPageError => pageState == PageState.error;
+  /// True when loading the first page (no previous data)
+  bool get isFirstLoading => super.isLoading && pageState == PageState.none;
+
+  /// True when loading additional page
+  bool get isLoadingPage => super.isData && pageState == PageState.loading;
+
+  /// True for any loading (either first page or next page)
+  @override
+  bool get isLoading => isFirstLoading || isLoadingPage;
+
+  /// True when additional page failed to load
+  bool get hasPageError => super.isData && pageState == PageState.error;
 
   @override
   R maybeWhen<R>({
