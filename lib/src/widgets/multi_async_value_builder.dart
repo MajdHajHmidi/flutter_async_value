@@ -20,9 +20,9 @@ part of '../../flutter_async_value.dart';
 ///   },
 /// )
 /// ```
-class MultiAsyncValueBuilder<T, E> extends StatelessWidget {
+class MultiAsyncValueBuilder<E> extends StatelessWidget {
   /// A list of [AsyncValue]s to observe.
-  final List<AsyncValue<T, E>> values;
+  final List<AsyncValue<dynamic, E>> values;
 
   /// Widget shown when **any** value is initial.
   final Widget Function(BuildContext context)? initial;
@@ -34,7 +34,7 @@ class MultiAsyncValueBuilder<T, E> extends StatelessWidget {
   final Widget Function(BuildContext context, List<E?> error) error;
 
   /// Widget shown when **all** values have data.
-  final Widget Function(BuildContext context, List<T> data) data;
+  final Widget Function(BuildContext context, List<dynamic> data) data;
 
   const MultiAsyncValueBuilder({
     super.key,
@@ -45,19 +45,19 @@ class MultiAsyncValueBuilder<T, E> extends StatelessWidget {
     required this.data,
   });
 
-  bool _isLoading(AsyncValue<T, E> v) {
+  bool _isLoading(AsyncValue<dynamic, E> v) {
     // Case 1: Normal AsyncValue
     if (v is! PaginatedAsyncValue) {
       return v.isLoading;
     }
 
     // Case 2: PaginatedAsyncValue
-    final paginated = v as PaginatedAsyncValue<T, E>;
+    final paginated = v as PaginatedAsyncValue<dynamic, E>;
     // We only treat as "loading" if it’s the first load
     return paginated.isFirstLoading;
   }
 
-  List<bool> _getLoadingList(List<AsyncValue<T, E>> values) {
+  List<bool> _getLoadingList(List<AsyncValue<dynamic, E>> values) {
     return [
       for (final value in values) _isLoading(value),
     ];
